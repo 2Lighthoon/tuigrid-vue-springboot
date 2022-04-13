@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.reffics.groupware.svc.menu.mapper.MenuMapper">
+	<select id="getUserMenus"
+		resultType="com.reffics.groupware.svc.menu.model.MenuVO"
+		parameterType="com.reffics.groupware.svc.menu.model.MenuVO">
+		SELECT 
+				MAIN_MENU_ID
+			,	MID_MENU_ID
+			,	SML_MENU_ID
+			,	SML_MENU_NM
+			,	SML_MENU_SEQ
+			,	MENU_ID
+			,	CREATE_ID
+			,	CREATE_DT
+			,	MOD_ID
+			,	MOD_DT
+		FROM
+			SML_MENU_MASTER
+		WHERE 
+			1=1
+		<if test="type == 'smlMenuNm'">
+			AND SML_MENU_NM LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="type == 'createId'">
+			AND CREATE_ID LIKE '%'||#{keyword}||'%'
+		</if>
+		ORDER BY 
+			CREATE_DT DESC;
+	</select>
+
+	<insert id="insert"
+		parameterType="com.reffics.groupware.svc.menu.model.MenuVO">
+		INSERT INTO 
+			SML_MENU_MASTER
+				(
+					MAIN_MENU_ID
+				,	MID_MENU_ID
+				,	SML_MENU_ID
+				,	SML_MENU_NM
+				,	SML_MENU_SEQ
+				,	MENU_ID
+				,	CREATE_ID
+				,	CREATE_DT
+				,	MOD_ID
+				,	MOD_DT
+				)
+			VALUES
+				( 
+					#{mainMenuId}
+				, 	#{midMenuId}
+				,	#{smlMenuId}
+				,	#{smlMenuNm}
+				,	NEXTVAL('SEQ_SML_MENU_MASTER')
+				,	#{menuId}
+				,	#{createId}
+				,	TO_CHAR(now(), 'YYYY-MM-DD HH24:MI')
+				,	#{modId}
+				,	#{modDt});		
+	</insert>
+</mapper>
